@@ -2,19 +2,44 @@ new Vue({
   el: '#app',
 
   methods: {
-    onDrowerItem() {
+    onDrawerItem() {
       console.log("================");
       console.log(arguments);
       console.log("================");
+    },
+    
+    pollCounters() {
+      if (this.countersPollIntervalId) {
+        clearInterval(this.countersPollIntervalId);
+      }
+      const t = this.$data.counters.autoUpdateTimeout;
+      if (t) {
+        this.countersPollIntervalId = setInterval(function(){
+          const Http = new XMLHttpRequest();
+          const url='/api/v1/cnc/counters';
+          Http.open("GET", url);
+          Http.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200 ) {
+              var obj = JSON.parse(Http.responseText); 
+              console.log(obj);
+//      this.$data.counters.data[3].value++;
+//      this.$data.counters.data[4].value++;
+            }
+          };
+          Http.send();
+        }.bind(this), 1000 * t);
+      }
     }
   },
   
   created: function () {
-    setInterval(function () {
-      this.$data.counters.data[3].value++;
-      this.$data.counters.data[4].value++;
-      console.log(this.$data.counters.autoUpdate);
-    }.bind(this), 1000); 
+    this.pollCounters();
+  },
+  
+  watch: {
+    'counters.autoUpdateTimeout': function (newVal) {
+      this.pollCounters();
+    }
   },
   
   data: () => ({
