@@ -3,6 +3,7 @@ package io.aeron.monitoring.api;
 import io.aeron.CncFileDescriptor;
 import io.aeron.driver.status.SystemCounterDescriptor;
 import io.aeron.monitoring.CncReader;
+import io.aeron.monitoring.Reader;
 import io.aeron.monitoring.model.ChannelInfo;
 import io.aeron.monitoring.model.CncSnapshot;
 import io.aeron.monitoring.model.CounterValue;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -21,8 +23,15 @@ import static io.aeron.CommonContext.AERON_DIR_PROP_DEFAULT;
 @RequestMapping(value = "/api/v1/cnc", method = RequestMethod.GET)
 @Api
 public class CncSnapshotController {
-    private final CncReader cncReader = new CncReader();
+    
+   /* 
+        private final File cnc = new File((AERON_DIR_PROP_DEFAULT),
+                CncFileDescriptor.CNC_FILE);
+                */
+    
+    private final Reader cncReader = new Reader();
 
+    /*
     @RequestMapping("version")
     @ApiOperation("Returns version of the CnC file")
     public int getVersion(@RequestParam("mediaDriver")
@@ -38,16 +47,17 @@ public class CncSnapshotController {
                                    final Optional<String> mediaDriver) {
         return readSnapshot(mediaDriver);
     }
+    */
 
     @RequestMapping("counters")
     @ApiOperation("Returns counters related to the Media Driver entirely")
-    public Map<SystemCounterDescriptor, CounterValue> getCounters(
+    public List<CounterValue> getCounters(
             @RequestParam("mediaDriver")
             @ApiParam("Media Driver directory to be read")
             final Optional<String> mediaDriver) {
-        return readSnapshot(mediaDriver).getCounters();
+        return cncReader.read().getCounters();
     }
-
+/*
     @RequestMapping("counters/{counter}")
     @ApiOperation("Returns single counter value")
     public CounterValue getCounter(@RequestParam("mediaDriver")
@@ -136,4 +146,5 @@ public class CncSnapshotController {
                 CncFileDescriptor.CNC_FILE);
         return cncReader.read(cnc);
     }
+    */
 }

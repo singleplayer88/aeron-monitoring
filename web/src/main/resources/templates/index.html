@@ -11,6 +11,7 @@
 <body>
 <div id="app">
   <v-app id="aeron-monitor">
+
     <v-navigation-drawer stateless fixed clipped class="grey lighten-4" app v-model="drawer" width="220">
       <v-list dense class="grey lighten-4">
         <template v-for="(item, i) in drawer_items">
@@ -28,11 +29,13 @@
         </template>
       </v-list>
     </v-navigation-drawer>
+
     <v-toolbar color="primary" app absolute clipped-left v-bind:height="48">
       <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title class="white--text title">[[${toolbar_title}]]</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
+
     <v-content>
       <v-container grid-list-md >
         <v-layout row wrap>
@@ -55,21 +58,27 @@
         </v-layout>
       </v-container>
     </v-content>
+
     <v-footer class="pa-3" app>
-      <div :style="{width: '100px'}">
+      <v-tooltip right :style="{width: '100px'}">
         <v-select
+          slot="activator"
           :items="counters.autoUpdateList"
           v-model.number="counters.autoUpdateTimeout"
 		  class="grey--text caption">
         </v-select>
-      </div>
+        <span>Refresh period, sec.</span>
+      </v-tooltip>
       <v-spacer></v-spacer>
       <div class="grey--text caption">v[[${app_version}]]</div>
     </v-footer>
+
   </v-app>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
 <script src="/js/app.js"></script>
+
 </body>
 </html>

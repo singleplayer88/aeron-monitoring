@@ -9,24 +9,47 @@ new Vue({
     },
     
     pollCounters() {
+      var self = this;
+      
+      var poll =  function(){
+        const Http = new XMLHttpRequest();
+        Http.open("GET", '/api/v1/cnc/counters');
+
+        Http.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200 ) {
+            const counters = JSON.parse(Http.responseText); 
+            var data = self.$data.counters.data;
+            for (var i = 0; i != counters.length; i++) {
+              const c = counters[i];
+              var d = self.$data.counters.data[i];
+              if (d) {
+                d.id = i;
+                d.name = c.label;
+                d.value = c.value;
+              } else {
+                const n = {
+                    id: i,
+                    name: c.label,
+                    value: c.value
+                };
+                data.push(n);
+              }
+            }
+            data.length = counters.length;
+          }
+        };
+        Http.send();
+      };
+      
       if (this.countersPollIntervalId) {
         clearInterval(this.countersPollIntervalId);
       }
+
       const t = this.$data.counters.autoUpdateTimeout;
       if (t) {
-        this.countersPollIntervalId = setInterval(function(){
-          const Http = new XMLHttpRequest();
-          const url='/api/v1/cnc/counters';
-          Http.open("GET", url);
-          Http.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200 ) {
-              var obj = JSON.parse(Http.responseText); 
-              console.log(obj);
-//      this.$data.counters.data[3].value++;
-//      this.$data.counters.data[4].value++;
-            }
-          };
-          Http.send();
+        poll();
+        this.countersPollIntervalId = setInterval(function() {
+          poll();
         }.bind(this), 1000 * t);
       }
     }
@@ -66,41 +89,6 @@ new Vue({
       ],
 
       data: [
-        {
-          id:  0,
-          name: 'Bytes sent', 
-          value: '292,870,080',
-        },
-        {
-          id:  1,
-          name: 'Bytes received', 
-          value: '292,881,312',
-        },
-        {
-          id:  2,
-          name: 'Failed offers to ReceiverProxy', 
-          value: 0,
-        },
-        {
-          id:  3,
-          name: 'Failed offers to SenderProxy', 
-          value: 0,
-        },
-        {
-          id:  4,
-          name: 'Failed offers to DriverConductorProxy', 
-          value: 0,
-        },
-        {
-          id:  5,
-          name: 'NAKs sent', 
-          value: 0,
-        },
-        {
-          id:  6,
-          name: 'NAKs received', 
-          value: 0,
-        },
       ]
     }
   }),
