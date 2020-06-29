@@ -8,7 +8,7 @@ subprojects {
         ext {
             aeronVersion = '1.11.2'
             junitVersion = '5.3.1'
-            checkstyleVersion = '8.12'
+            checkstyleVersion = '8.34'
         }
 
         repositories {
