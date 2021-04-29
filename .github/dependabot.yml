@@ -1,0 +1,30 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.puppycrawl.tools:checkstyle
+    versions:
+    - "8.39"
+    - "8.40"
+    - "8.41"
+    - 8.41.1
+  - dependency-name: org.springframework.boot:spring-boot-gradle-plugin
+    versions:
+    - 2.4.2
+    - 2.4.3
+    - 2.4.4
+  - dependency-name: org.springframework.boot
+    versions:
+    - 2.4.2
+    - 2.4.3
+    - 2.4.4
+  - dependency-name: org.junit.jupiter:junit-jupiter-engine
+    versions:
+    - 5.7.0
+  - dependency-name: org.junit.jupiter:junit-jupiter-api
+    versions:
+    - 5.7.0
